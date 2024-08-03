@@ -11,17 +11,23 @@ const Header = () => {
           <img src={logo} alt="logo" />
           <div className="flex gap-[16px] pr-6">
             <div
-              className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer"
-              onClick={() => navigate("/addItem")}
+              className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer hover:text-[#bfb63e]"
+              onClick={() => navigate("/allitem")}
             >
-              Create Advertisement
+              All
             </div>
             <div
+              className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer hover:text-[#bfb63e]"
+              onClick={() => navigate("/addItem")}
+            >
+              Create
+            </div>
+            {/* <div
               className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/allitem")}
             >
               Back
-            </div>
+            </div> */}
           </div>
         </div>
         <div className=" bg-[#F9F1E7] h-[100px] w-full" />

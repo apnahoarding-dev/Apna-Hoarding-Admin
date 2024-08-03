@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase.config";
 import SingleItem from "./SingleItem";
+import Header from "../global/Header";
 
 const AllItems = () => {
   const [data, setdata] = useState([]);
@@ -25,33 +26,37 @@ const AllItems = () => {
     console.log(data);
   }, []);
 
-  const items = data.slice(0, 8);
-  console.log(items);
+  // const items = data.slice(0, 8);
+  // console.log(items);
   return (
-    <div className="flex flex-col items-center gap-[28px] w-full">
-      {/* <div className=" bg-[#F9F1E7] h-[100px] w-full" /> */}
+    <>
+      <Header />
+      <div className="flex flex-col items-center w-full pb-[84px]">
+        {/* <div className=" bg-[#F9F1E7] h-[100px] w-full" /> */}
 
-      {items.map((item, key) => (
-        <>
-          <SingleItem
-            key={key}
-            title={item.title}
-            type={item.type}
-            img={item.img}
-            illuminate={item.illuminate}
-            size={item.size}
-            area={item.area}
-            location={item.location}
-            locality={item.locality}
-            city={item.city}
-            pincode={item.pincode}
-            desc={item.desc}
-            monthlyprice={item.monthlyprice}
-            perdayprice={item.perdayprice}
-          />
-        </>
-      ))}
-    </div>
+        {data.map((item, key) => (
+          <>
+            <SingleItem
+              key={key}
+              title={item.title}
+              type={item.type}
+              img={item.img}
+              illuminate={item.illuminate}
+              size={item.size}
+              area={item.area}
+              location={item.location}
+              locality={item.locality}
+              city={item.city}
+              pincode={item.pincode}
+              desc={item.desc}
+              monthlyprice={item.monthlyprice}
+              perdayprice={item.perdayprice}
+              id={item.id}
+            />
+          </>
+        ))}
+      </div>
+    </>
   );
 };
 

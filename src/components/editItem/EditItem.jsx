@@ -1,22 +1,22 @@
-import React from "react";
-import { db, storage } from "../../../firebase.config";
-import {
-  Timestamp,
-  addDoc,
-  collection,
-  serverTimestamp,
-} from "firebase/firestore";
-
+import React, { useState, useEffect } from "react";
+import Text from "../global/Text";
+import { useNavigate, useParams } from "react-router-dom";
+import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
+// import { onAuthStateChanged } from "firebase/auth";
+import { db, storage } from "../../../firebase.config";
 import { toast } from "react-toastify";
 import Header from "../global/Header";
+// import { ClipLoader } from "react-spinners";
 
-const CreateItem = () => {
+const EditItem = () => {
   const navigate = useNavigate();
+  const [data, setdata] = useState({});
+  let [color, setColor] = useState("#ffba08");
+  //   let [loading, setLoading] = useState(false);
 
-  // ---> hooks for creating data
+  // ---> hooks for update data
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
   const [location, setlocation] = useState("");
@@ -36,8 +36,7 @@ const CreateItem = () => {
   const [file, setfile] = useState("");
   const [perc, setPerc] = useState(null); // upload percent state
 
-  // uplaod image
-
+  // uplaod image--->
   useEffect(() => {
     const UploadImage = () => {
       const storageRef = ref(storage, file.name);
@@ -83,37 +82,86 @@ const CreateItem = () => {
     file && UploadImage();
   }, [file]);
 
-  // upload data
+  //---->
+  const { id } = useParams(); //param got id from url so url change first then we grab id from useparams
+  console.log("this is params id ", id);
 
-  const SubmitItem = async () => {
+  useEffect(() => {
+    const SingleData = async () => {
+      //   setLoading(true);
+
+      const docRef = doc(db, "CompleteItems", id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists(id)) {
+        console.log("Document data:", docSnap.data());
+        setdata(docSnap.data());
+      } else {
+        console.log("No such document!");
+        return null;
+      }
+      //   setLoading(false);
+    };
+    SingleData();
+  }, [id]);
+
+  //   const [user, setuser] = useState({});
+
+  //   useEffect(() => {
+  //     onAuthStateChanged(auth, (currentuser) => {
+  //       setuser(currentuser);
+  //     });
+  //   }, []);
+
+  const UpdateItems = async () => {
     try {
-      const res = await addDoc(collection(db, "CompleteItems"), {
-        title,
-        type,
-        location,
-        locality,
-        city,
-        desc,
-        pincode,
-        size,
-        area,
-        illuminate,
-        monthlyprice,
-        perdayprice,
-        img,
-        Timestamp: serverTimestamp(),
+      const washingtonRef = doc(db, "CompleteItems", id);
+
+      // Set the "capital" field of the city 'DC'
+      await updateDoc(washingtonRef, {
+        title: title,
+        type: type,
+        location: location,
+        locality: locality,
+        city: city,
+        desc: desc,
+        pincode: pincode,
+        size: size,
+        area: area,
+        illuminate: illuminate,
+        monthlyprice: monthlyprice,
+        perdayprice: perdayprice,
+        img: img,
       });
-      toast.success("Advertisement Added successfully");
+      toast.success("Item Updated Successfully");
     } catch (error) {
-      console.log(error);
+      toast.error(error);
     }
   };
 
+  //   if (loading) {
+  //     return (
+  //       <div className="flex flex-col items-center justify-center w-full">
+  //         {/* <PageType page="Cart" /> */}
+
+  //         <ClipLoader
+  //           className="my-[84px]"
+  //           color={color}
+  //           loading={loading}
+  //           // cssOverride={override}
+  //           size={100}
+  //           aria-label="Loading Spinner"
+  //           data-testid="loader"
+  //         />
+  //       </div>
+  //     );
+  //   }
+
   return (
     <>
-      <div className="flex flex-col w-full ">
+      <div className="flex flex-col w-full">
         <Header />
-        <div className="flex w-full justify-center my-[24px] ">
+        <div className="flex w-full justify-center mt-[24px]  mb-[98px] ">
           <div className="flex flex-col items-center gap-[32px] p-[16px]">
             <div className="flex flex-col gap-[32px] py-[24px] px-[64px] border-2 rounded-xl ">
               {/*  */}
@@ -130,8 +178,9 @@ const CreateItem = () => {
                 <input
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text"
-                  placeholder="eg- Digital Screen at Elevation..."
+                  //   placeholder="eg- Digital Screen at Elevation..."
                   onChange={(e) => setTitle(e.target.value)}
+                  placeholder={data.title}
                   required
                 />
               </div>
@@ -144,8 +193,9 @@ const CreateItem = () => {
                 <input
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text"
-                  placeholder="eg- Billboard "
+                  //   placeholder="eg- Billboard "
                   onChange={(e) => setType(e.target.value)}
+                  placeholder={data.type}
                   required
 
                   // value={type}
@@ -159,8 +209,9 @@ const CreateItem = () => {
                 <input
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text"
-                  placeholder="eg- IBC Pipload "
+                  //   placeholder="eg- IBC Pipload "
                   onChange={(e) => setlocation(e.target.value)}
+                  placeholder={data.location}
                   required
                   // value={location}
                 />
@@ -173,8 +224,9 @@ const CreateItem = () => {
                 <input
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text"
-                  placeholder="eg- West Bandra  "
+                  placeholder={data.locality}
                   onChange={(e) => setLocality(e.target.value)}
+                  //   value={data.locality}
                   required
                   // value={location}
                 />
@@ -189,8 +241,9 @@ const CreateItem = () => {
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text "
                   onChange={(e) => setcity(e.target.value)}
+                  placeholder={data.city}
                   required
-                  placeholder="eg- Mumbai  "
+                  //   placeholder="eg- Mumbai  "
 
                   // value={price}
                 />
@@ -205,7 +258,8 @@ const CreateItem = () => {
                   type="number "
                   onChange={(e) => setDesc(e.target.value)}
                   required
-                  placeholder="About the hoarding in detail... "
+                  //   placeholder="About the hoarding in detail... "
+                  placeholder={data.desc}
 
                   // value={price}
                 />
@@ -222,7 +276,8 @@ const CreateItem = () => {
                     type="number "
                     onChange={(e) => setpincode(e.target.value)}
                     required
-                    placeholder="789XXX "
+                    // placeholder="789XXX "
+                    placeholder={data.pincode}
 
                     // value={price}
                   />
@@ -235,8 +290,9 @@ const CreateItem = () => {
                     className="h-[56px]  border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="number "
                     onChange={(e) => setArea(e.target.value)}
+                    placeholder={data.area}
                     required
-                    placeholder="eg- 436"
+                    // placeholder="eg- 436"
 
                     // value={price}
                   />
@@ -253,8 +309,9 @@ const CreateItem = () => {
                     className="h-[56px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="text"
                     onChange={(e) => setIlluminate(e.target.value)}
+                    placeholder={data.illuminate}
                     required
-                    placeholder="eg- Ledscreen "
+                    // placeholder="eg- Ledscreen "
 
                     // value={price}
                   />
@@ -267,8 +324,9 @@ const CreateItem = () => {
                     className="h-[56px]  border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="number "
                     onChange={(e) => setSize(e.target.value)}
+                    placeholder={data.size}
                     required
-                    placeholder="eg- 8x15"
+                    // placeholder="eg- 8x15"
 
                     // value={price}
                   />
@@ -284,8 +342,9 @@ const CreateItem = () => {
                     className="h-[56px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="number "
                     onChange={(e) => setMonthlyprice(e.target.value)}
+                    placeholder={data.monthlyprice}
                     required
-                    placeholder="eg- 27500 "
+                    // placeholder="eg- 27500 "
 
                     // value={price}
                   />
@@ -298,8 +357,9 @@ const CreateItem = () => {
                     className="h-[56px]  border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="number "
                     onChange={(e) => setPerdayprice(e.target.value)}
+                    placeholder={data.perdayprice}
                     required
-                    placeholder="eg- 950"
+                    // placeholder="eg- 950"
 
                     // value={price}
                   />
@@ -316,22 +376,26 @@ const CreateItem = () => {
                   //   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="file"
                   onChange={(e) => setfile(e.target.files[0])}
+                  //   value={data.img}
                 />
               </div>
-
-              <button
-                onClick={() => {
-                  SubmitItem();
-                  navigate("/");
-                }}
-                disabled={perc != null && perc < 100}
-                className="  text-[18px] text-[#FFF] bg-[#B88E2F] hover:bg-[#a37c20] w-full font-[600] p-[16px] cursor-pointer disabled:bg-[#dbbb6f]"
-              >
-                Submit
-              </button>
-              {/* </div> */}
-              <div className="text-[16px] font-[400] text-[#666]">
-                *all fields are required to be filled
+              <div className="flex justify-between w-full">
+                <div
+                  className="text-[26px] text-[#626060]   font-semibold pr-8 cursor-pointer hover:text-[#313131]"
+                  onClick={() => navigate("/allitem")}
+                >
+                  Back
+                </div>
+                <button
+                  disabled={perc != null && perc < 100}
+                  onClick={() => {
+                    UpdateItems();
+                    navigate("/");
+                  }}
+                  className=" text-[18px] text-[#FFF] bg-[#B88E2F] hover:bg-[#a37c20] w-[150px] rounded-xl font-[600] p-[16px] cursor-pointer disabled:bg-[#dbbb6f]"
+                >
+                  Update
+                </button>
               </div>
             </div>
           </div>
@@ -341,4 +405,4 @@ const CreateItem = () => {
   );
 };
 
-export default CreateItem;
+export default EditItem;
