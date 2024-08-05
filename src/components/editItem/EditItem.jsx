@@ -19,12 +19,12 @@ const EditItem = () => {
   // ---> hooks for update data
   const [title, setTitle] = useState("");
   const [type, setType] = useState("");
-  const [location, setlocation] = useState("");
+  const [location, setLocation] = useState("");
   const [locality, setLocality] = useState("");
 
-  const [city, setcity] = useState("");
+  const [city, setCity] = useState("");
   const [desc, setDesc] = useState("");
-  const [pincode, setpincode] = useState(0);
+  const [pincode, setPincode] = useState(0);
   const [size, setSize] = useState("");
   const [illuminate, setIlluminate] = useState("");
   const [area, setArea] = useState("");
@@ -93,9 +93,27 @@ const EditItem = () => {
       const docRef = doc(db, "CompleteItems", id);
       const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists(id)) {
-        console.log("Document data:", docSnap.data());
-        setdata(docSnap.data());
+      if (docSnap.exists()) {
+        // console.log("Document data:", docSnap.data());
+        // setdata(docSnap.data());
+
+        const itemData = docSnap.data();
+        // setData(itemData);
+        setTitle(itemData.title);
+        setType(itemData.type);
+        setLocation(itemData.location);
+        setLocality(itemData.locality);
+        setCity(itemData.city);
+        setDesc(itemData.desc);
+        setPincode(itemData.pincode);
+        setSize(itemData.size);
+        setIlluminate(itemData.illuminate);
+        setArea(itemData.area);
+        setMonthlyprice(itemData.monthlyprice);
+        setPerdayprice(itemData.perdayprice);
+
+        //
+        setdata(itemData);
       } else {
         console.log("No such document!");
         return null;
@@ -139,24 +157,6 @@ const EditItem = () => {
     }
   };
 
-  //   if (loading) {
-  //     return (
-  //       <div className="flex flex-col items-center justify-center w-full">
-  //         {/* <PageType page="Cart" /> */}
-
-  //         <ClipLoader
-  //           className="my-[84px]"
-  //           color={color}
-  //           loading={loading}
-  //           // cssOverride={override}
-  //           size={100}
-  //           aria-label="Loading Spinner"
-  //           data-testid="loader"
-  //         />
-  //       </div>
-  //     );
-  //   }
-
   return (
     <>
       <div className="flex flex-col w-full">
@@ -179,6 +179,7 @@ const EditItem = () => {
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text"
                   //   placeholder="eg- Digital Screen at Elevation..."
+                  value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder={data.title}
                   required
@@ -194,6 +195,7 @@ const EditItem = () => {
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text"
                   //   placeholder="eg- Billboard "
+                  value={type}
                   onChange={(e) => setType(e.target.value)}
                   placeholder={data.type}
                   required
@@ -210,7 +212,8 @@ const EditItem = () => {
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text"
                   //   placeholder="eg- IBC Pipload "
-                  onChange={(e) => setlocation(e.target.value)}
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                   placeholder={data.location}
                   required
                   // value={location}
@@ -225,8 +228,8 @@ const EditItem = () => {
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text"
                   placeholder={data.locality}
+                  value={locality}
                   onChange={(e) => setLocality(e.target.value)}
-                  //   value={data.locality}
                   required
                   // value={location}
                 />
@@ -240,7 +243,8 @@ const EditItem = () => {
                 <input
                   className="h-[56px] min-w-[580px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                   type="text "
-                  onChange={(e) => setcity(e.target.value)}
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
                   placeholder={data.city}
                   required
                   //   placeholder="eg- Mumbai  "
@@ -259,6 +263,7 @@ const EditItem = () => {
                   onChange={(e) => setDesc(e.target.value)}
                   required
                   //   placeholder="About the hoarding in detail... "
+                  value={desc}
                   placeholder={data.desc}
 
                   // value={price}
@@ -274,7 +279,8 @@ const EditItem = () => {
                   <input
                     className="h-[56px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="number "
-                    onChange={(e) => setpincode(e.target.value)}
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value)}
                     required
                     // placeholder="789XXX "
                     placeholder={data.pincode}
@@ -289,6 +295,7 @@ const EditItem = () => {
                   <input
                     className="h-[56px]  border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="number "
+                    value={area}
                     onChange={(e) => setArea(e.target.value)}
                     placeholder={data.area}
                     required
@@ -308,6 +315,7 @@ const EditItem = () => {
                   <input
                     className="h-[56px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="text"
+                    value={illuminate}
                     onChange={(e) => setIlluminate(e.target.value)}
                     placeholder={data.illuminate}
                     required
@@ -323,6 +331,7 @@ const EditItem = () => {
                   <input
                     className="h-[56px]  border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="number "
+                    value={size}
                     onChange={(e) => setSize(e.target.value)}
                     placeholder={data.size}
                     required
@@ -341,6 +350,7 @@ const EditItem = () => {
                   <input
                     className="h-[56px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="number "
+                    value={monthlyprice}
                     onChange={(e) => setMonthlyprice(e.target.value)}
                     placeholder={data.monthlyprice}
                     required
@@ -356,6 +366,7 @@ const EditItem = () => {
                   <input
                     className="h-[56px]  border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
                     type="number "
+                    value={perdayprice}
                     onChange={(e) => setPerdayprice(e.target.value)}
                     placeholder={data.perdayprice}
                     required
@@ -390,7 +401,7 @@ const EditItem = () => {
                   disabled={perc != null && perc < 100}
                   onClick={() => {
                     UpdateItems();
-                    navigate("/");
+                    navigate("/allItem");
                   }}
                   className=" text-[18px] text-[#FFF] bg-[#B88E2F] hover:bg-[#a37c20] w-[150px] rounded-xl font-[600] p-[16px] cursor-pointer disabled:bg-[#dbbb6f]"
                 >
