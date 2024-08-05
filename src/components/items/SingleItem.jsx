@@ -45,7 +45,7 @@ const SingleItem = (props) => {
               alt="edit"
             />
             <img
-              className="h-[30px] w-[30px] hover:shadow-2xl"
+              className="h-[30px] w-[30px] transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 "
               src={DeleatIcon}
               onClick={() => {
                 DeleatItem(props.id);
