@@ -31,6 +31,10 @@ const CreateItem = () => {
   const [monthlyprice, setMonthlyprice] = useState("");
   const [perdayprice, setPerdayprice] = useState("");
   const [img, setImg] = useState({});
+  const [discount, setDiscount] = useState();
+  const [discountPerc, setDiscountPerc] = useState();
+  const [contactNumber, setContactNumber] = useState();
+
   // ---->
 
   const [file, setfile] = useState("");
@@ -100,7 +104,10 @@ const CreateItem = () => {
         illuminate,
         monthlyprice,
         perdayprice,
+        discount,
+        discountPerc,
         img,
+        contactNumber,
         Timestamp: serverTimestamp(),
       });
       toast.success("Advertisement Added successfully");
@@ -306,6 +313,53 @@ const CreateItem = () => {
                 </div>
               </div>
               {/*  */}
+              <div className="flex justify-between w-full ">
+                <div className="flex flex-col gap-[8px] items-start">
+                  <div className="text-[16px] text-[#666666] font-[400]">
+                    Discount
+                  </div>
+                  <input
+                    className="h-[56px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
+                    type="number "
+                    onChange={(e) => setDiscount(e.target.value)}
+                    required
+                    placeholder="eg- 27500 "
+
+                    // value={price}
+                  />
+                </div>
+                <div className="flex flex-col gap-[8px] items-start">
+                  <div className="text-[16px] text-[#666666] font-[400]">
+                    Discount %
+                  </div>
+                  <input
+                    className="h-[56px]  border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
+                    type="number "
+                    onChange={(e) => setDiscountPerc(e.target.value)}
+                    required
+                    placeholder="eg- 10"
+
+                    // value={price}
+                  />
+                </div>
+              </div>
+              {/*  */}
+              <div className="flex justify-between w-full ">
+                <div className="flex flex-col gap-[8px] items-start">
+                  <div className="text-[16px] text-[#666666] font-[400]">
+                    Contact
+                  </div>
+                  <input
+                    className="h-[56px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
+                    type="number "
+                    onChange={(e) => setContactNumber(e.target.value)}
+                    required
+                    placeholder="+91 00000000"
+
+                    // value={price}
+                  />
+                </div>
+              </div>
 
               {/* -----> more input fields */}
               <div className="flex flex-col gap-[8px] items-start">
@@ -322,7 +376,7 @@ const CreateItem = () => {
               <button
                 onClick={() => {
                   SubmitItem();
-                  navigate("/");
+                  navigate("/allitem");
                 }}
                 disabled={perc != null && perc < 100}
                 className="  text-[18px] text-[#FFF] bg-[#B88E2F] hover:bg-[#a37c20] w-full font-[600] p-[16px] cursor-pointer disabled:bg-[#dbbb6f]"

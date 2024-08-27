@@ -30,6 +30,8 @@ const EditItem = () => {
   const [area, setArea] = useState("");
   const [monthlyprice, setMonthlyprice] = useState("");
   const [perdayprice, setPerdayprice] = useState("");
+  const [discount, setDiscount] = useState();
+  const [discountPerc, setDiscountPerc] = useState();
   const [img, setImg] = useState({});
   // ---->
 
@@ -111,6 +113,9 @@ const EditItem = () => {
         setArea(itemData.area);
         setMonthlyprice(itemData.monthlyprice);
         setPerdayprice(itemData.perdayprice);
+
+        setDiscount(itemData.discount);
+        setDiscountPerc(itemData.discountPerc);
 
         //
         setdata(itemData);
@@ -377,6 +382,38 @@ const EditItem = () => {
                 </div>
               </div>
               {/*  */}
+              <div className="flex justify-between w-full ">
+                <div className="flex flex-col gap-[8px] items-start">
+                  <div className="text-[16px] text-[#666666] font-[400]">
+                    Discount
+                  </div>
+                  <input
+                    className="h-[56px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
+                    type="number "
+                    value={discount}
+                    onChange={(e) => setDiscount(e.target.value)}
+                    required
+                    placeholder="eg- 27500 "
+
+                    // value={price}
+                  />
+                </div>
+                <div className="flex flex-col gap-[8px] items-start">
+                  <div className="text-[16px] text-[#666666] font-[400]">
+                    Discount %
+                  </div>
+                  <input
+                    className="h-[56px]  border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
+                    type="number "
+                    value={discountPerc}
+                    onChange={(e) => setDiscountPerc(e.target.value)}
+                    required
+                    placeholder="eg- 10"
+
+                    // value={price}
+                  />
+                </div>
+              </div>
 
               {/* -----> more input fields */}
               <div className="flex flex-col gap-[8px] items-start">
@@ -401,7 +438,7 @@ const EditItem = () => {
                   disabled={perc != null && perc < 100}
                   onClick={() => {
                     UpdateItems();
-                    navigate("/allItem");
+                    navigate("/allitem");
                   }}
                   className=" text-[18px] text-[#FFF] bg-[#B88E2F] hover:bg-[#a37c20] w-[150px] rounded-xl font-[600] p-[16px] cursor-pointer disabled:bg-[#dbbb6f]"
                 >

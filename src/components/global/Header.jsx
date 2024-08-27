@@ -14,7 +14,7 @@ const Header = () => {
               className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer hover:text-[#bfb63e]"
               onClick={() => navigate("/allitem")}
             >
-              All
+              Hoardings
             </div>
             <div
               className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer hover:text-[#bfb63e]"
@@ -22,6 +22,19 @@ const Header = () => {
             >
               Create
             </div>
+            <div
+              className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer hover:text-[#bfb63e]"
+              onClick={() => navigate("/orders")}
+            >
+              Orders
+            </div>
+            <div
+              className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer hover:text-[#bfb63e]"
+              onClick={() => navigate("/messages")}
+            >
+              Messages
+            </div>
+
             {/* <div
               className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer"
               onClick={() => navigate("/allitem")}
@@ -30,7 +43,7 @@ const Header = () => {
             </div> */}
           </div>
         </div>
-        <div className=" bg-[#F9F1E7] h-[100px] w-full" />
+        <div className=" bg-[#F9F1E7] h-[40px] w-full" />
       </div>
     </>
   );
