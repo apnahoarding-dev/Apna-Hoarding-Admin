@@ -21,7 +21,7 @@ const SingleItem = (props) => {
     }
   };
   return (
-    <div className="flex flex-col gap-[16px] w-[60%] border-[1px] px-4 shadow-xl border-t-[#cdcaca] mt-[68px]">
+    <div className="flex flex-col gap-[12px] w-[60%] border-[1px] px-4 shadow-xl border-t-[#cdcaca] rounded-md">
       <div className="flex flex-col w-full">
         <div className="flex w-full justify-between py-8 ">
           <div className=" text-[24px] font-[400] text-[#000]">
