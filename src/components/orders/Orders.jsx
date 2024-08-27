@@ -14,14 +14,23 @@ const Orders = () => {
 
   // const { id } = useParams();
 
-  const DeleatItem = async (id) => {
+  const DeleatOrder = async (id) => {
     try {
       setLoading(true);
+      const subcollectionRef = collection(db, "Orders", id, `Order${id}`);
+      const querySnapshot = await getDocs(subcollectionRef);
+
+      for (const documentSnapshot of querySnapshot.docs) {
+        const docRef = doc(db, "Orders", id, `Order${id}`, documentSnapshot.id);
+        await deleteDoc(docRef); // Delete each document one by one
+        console.log(`Deleted document with ID: ${documentSnapshot.id}`);
+      }
+
       await deleteDoc(doc(db, "Orders", id));
-      toast.success("Item deleated successfully");
+      toast.success("Order deleated successfully");
       setLoading(false);
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      toast.error(error);
     }
   };
 
@@ -100,8 +109,7 @@ const Orders = () => {
                     <button
                       className="bg-[#f44336] text-white p-[5px_20px]  max-w-[100px] rounded-[2px] hover:bg-[#e53124]"
                       onClick={() => {
-                        DeleatItem(item.id);
-                        // setLoading(true);
+                        DeleatOrder(item.id);
                       }}
                     >
                       Delete
