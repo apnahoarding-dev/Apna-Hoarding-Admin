@@ -34,6 +34,7 @@ const CreateItem = () => {
   const [discount, setDiscount] = useState();
   const [discountPerc, setDiscountPerc] = useState();
   const [contactNumber, setContactNumber] = useState();
+  const [itemCode, setItemCode] = useState("");
 
   // ---->
 
@@ -108,6 +109,7 @@ const CreateItem = () => {
         discountPerc,
         img,
         contactNumber,
+        itemCode,
         Timestamp: serverTimestamp(),
       });
       toast.success("Advertisement Added successfully");
@@ -355,6 +357,20 @@ const CreateItem = () => {
                     onChange={(e) => setContactNumber(e.target.value)}
                     required
                     placeholder="+91 00000000"
+
+                    // value={price}
+                  />
+                </div>
+                <div className="flex flex-col gap-[8px] items-start">
+                  <div className="text-[16px] text-[#666666] font-[400]">
+                    Item Code
+                  </div>
+                  <input
+                    className="h-[56px] border-[1px] rounded-[4px] border-[#66666659] pl-[12px] "
+                    type="text "
+                    onChange={(e) => setItemCode(e.target.value)}
+                    required
+                    placeholder="CV004D33"
 
                     // value={price}
                   />

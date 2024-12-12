@@ -66,13 +66,13 @@ const OrderDetails = () => {
         </div>
       ) : (
         <div className="flex items-center justify-center w-full mb-[144px] ">
-          <div className="flex flex-col  w-[40%]  m-6 p-8 border-2  rounded-lg">
+          <div className="flex flex-col  w-[45%]  m-6 p-8 border-2  rounded-lg">
             <div className="flex flex-col items-center justify-center rounded-lg border-2 shadow-md py-[16px] border-t-[#bfb63e] ">
               <div className="text-[28px] font-medium  ">
                 {userData.fname} {userData.lname}
               </div>
               <div className="text-[18px] text-[#626060] font-medium">
-                {userData.Email}
+                {userData.email}
               </div>
               <div className="text-[18px] text-[#626060] font-medium">
                 {userData.contact}

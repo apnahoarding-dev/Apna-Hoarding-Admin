@@ -35,6 +35,7 @@ const Orders = () => {
 
       await deleteDoc(doc(db, "Orders", id));
       toast.success("Order deleated successfully");
+      fetchOrders();
       setLoading(false);
     } catch (error) {
       toast.error(error);
@@ -62,33 +63,49 @@ const Orders = () => {
   // }, []);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      let unread = 0;
-      const orderList = [];
-
-      try {
-        const querySnapshot = await getDocs(collection(db, "Orders"));
-
-        querySnapshot.forEach((doc) => {
-          const orderData = { id: doc.id, ...doc.data() };
-
-          // If the backend provides an `isRead` field or you can compare a timestamp:
-          if (!orderData.isRead) {
-            unread++; // Increment unread count
-          }
-
-          orderList.push(orderData);
-        });
-
-        setOrders(orderList);
-        setUnreadCount(unread); // Update unread count
-      } catch (error) {
-        toast.error("Error fetching orders.");
-      }
-    };
-
     fetchOrders();
   }, []);
+
+  const fetchOrders = async () => {
+    let unread = 0;
+    const orderList = [];
+
+    try {
+      setLoading(true);
+      const querySnapshot = await getDocs(collection(db, "Orders"));
+
+      querySnapshot.forEach((doc) => {
+        const orderData = { id: doc.id, ...doc.data() };
+
+        // If the backend provides an `isRead` field or you can compare a timestamp:
+        if (!orderData.isRead) {
+          unread++; // Increment unread count
+        }
+
+        orderList.push(orderData);
+      });
+
+      setOrders(orderList);
+      setUnreadCount(unread); // Update unread count
+      setLoading(false);
+    } catch (error) {
+      toast.error("Error fetching orders.");
+    }
+  };
+  const AcceptOrder = async (id) => {
+    try {
+      // setLoading(true);
+      const orderRef = doc(db, "Orders", id);
+      await updateDoc(orderRef, { orderStatus: "Accepted" });
+      toast.success(" Order Accepted");
+      fetchOrders();
+      // setLoading(false);
+      // Update each order as read
+      // setUnreadCount(1--);y
+    } catch (error) {
+      toast.error("Error in accepting order  ", error);
+    }
+  };
 
   const MarkRead = async (id) => {
     try {
@@ -98,13 +115,6 @@ const Orders = () => {
     } catch (error) {
       console.log("Error in marking read ", error);
     }
-    // orders.forEach(async (order) => {
-    //   if (!order.isRead) {
-    //     const orderRef = doc(db, "Orders", order.id);
-    //     await updateDoc(orderRef, { isRead: true }); // Update each order as read
-    //   }
-    // });
-    // setUnreadCount(0); // Reset unread count
   };
   return (
     <>
@@ -146,10 +156,15 @@ const Orders = () => {
                     </div>
                     <div className="font-[500] text-[22px] cursor-pointer text-[#2c2a2a] flex flex-col gap-[4px]">
                       <div className="flex  items-center pb-[5px]">
-                        {item.fname} {item.lname}{" "}
+                        {item.fname} {item.lname}
+                        <div>
+                          {!item.isRead && (
+                            <div className=" ml-4 mt-[4px] h-3 w-3 rounded-full bg-[#bfb63e] "></div>
+                          )}
+                        </div>
                       </div>
                       <div className="flex text-[12px] text-[#555] font-[500]">
-                        {item.Email}
+                        {item.email}
                       </div>
                       <div className="flex text-[12px] text-[#555]">
                         {item.contact}
@@ -160,6 +175,19 @@ const Orders = () => {
                     </div>
                   </div>
                   <div className="flex gap-[12px] items-center">
+                    {item.orderStatus === "Pending" ? (
+                      <button
+                        className="bg-[#1f9427] text-white p-[5px_20px]  max-w-[100px] rounded-[2px] hover:bg-[#1b7f2a]"
+                        onClick={() => {
+                          AcceptOrder(item.id);
+                          // DeleatOrder(item.id);
+                        }}
+                      >
+                        Accept
+                      </button>
+                    ) : (
+                      <div></div>
+                    )}
                     <button
                       className=" text-black p-[5px_20px]  max-w-[100px] border-2 rounded-[2px] hover:bg-[#ebeaea]"
                       onClick={() => {
@@ -169,6 +197,7 @@ const Orders = () => {
                     >
                       Details
                     </button>
+
                     <button
                       className="bg-[#f44336] text-white p-[5px_20px]  max-w-[100px] rounded-[2px] hover:bg-[#e53124]"
                       onClick={() => {

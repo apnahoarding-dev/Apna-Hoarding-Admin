@@ -20,7 +20,6 @@ function App() {
           <Route path="/messages" element={<Messages />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/order/:id" element={<OrderDetails />} />
-
           <Route path="/:id" element={<EditItem />} />
         </Routes>
       </BrowserRouter>
