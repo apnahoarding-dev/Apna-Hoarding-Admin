@@ -15,17 +15,17 @@ import { toast } from "react-toastify";
 const Messages = () => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  let [loading, setLoading] = useState(false);
-  let [color, setColor] = useState("#ffba08");
+  const [loading, setLoading] = useState(false);
+  const [color, setColor] = useState("#ffba08");
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const DeleatItem = async (id) => {
+  const deleteItem = async (id) => {
     try {
       await deleteDoc(doc(db, "Messages", id));
-      toast.success("Message deleated successfully");
-      navigate("/allItem");
+      toast.success("Message deleted successfully");
+      fetchMessages(); // Refresh messages after deletion
     } catch (err) {
-      console.log(err);
+      console.error("Error deleting message:", err);
     }
   };
 
@@ -37,54 +37,27 @@ const Messages = () => {
       setLoading(true);
       const querySnapshot = await getDocs(collection(db, "Messages"));
       querySnapshot.forEach((doc) => {
-        const messages = { id: doc.id, ...doc.data() };
-
-        if (!messages.isRead) {
-          unread++; // Increment unread count
-        }
-
-        datalist.push(messages);
+        const message = { id: doc.id, ...doc.data() };
+        if (!message.isRead) unread++;
+        datalist.push(message);
       });
-      console.log(datalist);
 
       setData(datalist);
-      setUnreadCount(unread); // Update unread count
-
+      setUnreadCount(unread);
       setLoading(false);
     } catch (error) {
-      console.log("Error getting messages", error);
+      console.error("Error fetching messages:", error);
     }
   };
 
-  // const MarkRead = async (data) => {
-
-  //   data.forEach(async (order) => {
-  //     if (!order.isRead) {
-  //       const orderRef = doc(db, "Orders", order.id);
-  //       await updateDoc(orderRef, { isRead: true }); // Update each order as read
-  //     }
-  //   });
-  //   setUnreadCount(0); // Reset unread count
-  // };
-
-  const MarkRead = async (id) => {
+  const markAsRead = async (id) => {
     try {
-      setLoading(true);
-      const orderRef = doc(db, "Messages", id);
-      await updateDoc(orderRef, { isRead: true }); // Update each order as read
-      setLoading(false);
-
-      // setUnreadCount(1--);y
+      const messageRef = doc(db, "Messages", id);
+      await updateDoc(messageRef, { isRead: true });
+      fetchMessages(); // Refresh messages after marking as read
     } catch (error) {
-      console.log("Error in marking read ", error);
+      console.error("Error marking message as read:", error);
     }
-    // orders.forEach(async (order) => {
-    //   if (!order.isRead) {
-    //     const orderRef = doc(db, "Orders", order.id);
-    //     await updateDoc(orderRef, { isRead: true }); // Update each order as read
-    //   }
-    // });
-    // setUnreadCount(0); // Reset unread count
   };
 
   useEffect(() => {
@@ -97,60 +70,75 @@ const Messages = () => {
       {loading ? (
         <div className="flex flex-col items-center justify-center w-full">
           <ClipLoader
-            className="my-[84px]"
+            className="my-20"
             color={color}
             loading={loading}
-            // cssOverride={override}
             size={100}
             aria-label="Loading Spinner"
             data-testid="loader"
           />
         </div>
       ) : (
-        <div className="flex items-center justify-center w-full ">
-          <div className="flex flex-col items-center  w-full my-8 ">
-            <div className="flex items-center  w-[46%] text-[32px] font-medium  ">
-              All Messages
+        <div className="flex justify-center w-full">
+          <div className="flex flex-col items-center justify-center w-[50%] px-4">
+            <div className="flex items-center justify-between w-full max-w-4xl mt-8 mb-4">
+              <h1 className="text-2xl font-semibold">All Messages</h1>
               {unreadCount > 0 && (
-                <span className="text-[#aea529] ml-4 text-[24px] ">
-                  ({unreadCount})
+                <span className="text-lg text-yellow-600">
+                  ({unreadCount} Unread)
                 </span>
               )}
             </div>
 
-            {data.map((item, key) => (
-              <div className="flex flex-col  w-[50%]  m-6 p-4 border-2 rounded-lg shadow-md">
-                <div className="flex  items-center justify-between text-[18px]  text-[#555] ">
-                  {item.name}
-                  {!item.isRead && (
-                    <div className=" mr-4 h-3 w-3 rounded-full bg-[#bfb63e] "></div>
-                  )}
-                </div>
-                <div className="flex items-center justify-between text-[16px]  text-[#555] ">
-                  {item.email}
-                  {!item.isRead && (
-                    <div
-                      className=" text-[#949292] hover:text-[#555555] font-medium cursor-pointer  "
-                      onClick={() => MarkRead(item.id)}
-                    >
-                      Read
+            {data.length === 0 ? (
+              <p className="text-gray-500 mt-4">No messages found.</p>
+            ) : (
+              <div className="flex flex-col gap-6 w-full max-w-4xl">
+                {data.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex flex-col p-4 border rounded-lg shadow-md bg-white"
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-xl my-2 font-medium text-gray-700">
+                        {item.name}
+                      </span>
+                      {!item.isRead && (
+                        <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className="text-[16px]  text-[#555] ">{item.number}</div>
-                <div className="text-[16px] text-[#555] ">{item.city}</div>
-                <div className=" text-[20px] my-[14px]">{item.message}</div>
-                <button
-                  className="bg-[#f44336] text-white p-[10px]  max-w-[100px] rounded-md hover:bg-[#ef392c] my-[6px]"
-                  onClick={() => {
-                    DeleatItem(item.id);
-                    // setLoading(true);
-                  }}
-                >
-                  Deleat
-                </button>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">{item.email}</span>
+                      {!item.isRead && (
+                        <button
+                          className="text-sm text-blue-600 hover:underline"
+                          onClick={() => markAsRead(item.id)}
+                        >
+                          Mark as Read
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-gray-600">{item.number}</p>
+                    <p className="text-gray-600 mb-4">{item.city}</p>
+                    <textarea
+                      readOnly
+                      value={item.message}
+                      className="text-base text-gray-700 mt-2 bg-gray-50 p-2 rounded border focus:outline-none  w-full min-h-[100px]"
+                      style={{ resize: "none" }}
+                      maxLength={200}
+                    ></textarea>
+                    <div className="flex justify-end my-6">
+                      <button
+                        className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500"
+                        onClick={() => deleteItem(item.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         </div>
       )}

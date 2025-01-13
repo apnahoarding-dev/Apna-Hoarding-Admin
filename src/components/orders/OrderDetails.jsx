@@ -2,9 +2,18 @@ import React, { useEffect, useState } from "react";
 import Header from "../global/Header";
 // import Footer from "../footer/Footer";
 import { useParams, useNavigate } from "react-router-dom";
-import { getDocs, getDoc, collection, doc } from "firebase/firestore";
+import {
+  getDocs,
+  getDoc,
+  collection,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../../firebase.config";
 import { ClipLoader } from "react-spinners";
+import rejectIcon from "../../assets/Reject.svg";
+import acceptIcon from "../../assets/Accept.svg";
+import { toast } from "react-toastify";
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -46,8 +55,52 @@ const OrderDetails = () => {
     }
   };
 
-  console.log(userData);
-  console.log(orderData);
+  // const handleAccept = async (id) => {
+  //   try {
+  //     const orderRef = doc(db, "Orders", id);
+  //     const orderItemRef = collection(orderRef, `Order${id}`);
+
+  //     await updateDoc(orderItemRef, { orderStatus: "Accepted" });
+  //     toast.info(" Order item Accepted");
+  //   } catch (error) {
+  //     toast.error("Error in accepting order  ", error);
+  //     console.log("given error", error);
+  //   }
+  // };
+
+  const handleAccept = async (itemId) => {
+    const updatedData = { orderStatus: "Accepted" };
+    try {
+      // Create a reference to the specific document
+      const docRef = doc(db, "Orders", id, "Order" + id, itemId);
+
+      // Update the document with the provided data
+      await updateDoc(docRef, updatedData);
+
+      toast.success("Document updated successfully!");
+      window.location.reload();
+    } catch (error) {
+      toast.error("Error updating document");
+      console.error("Error details:", error);
+    }
+  };
+
+  const handleReject = async (itemId) => {
+    const updatedData = { orderStatus: "Cancelled" };
+    try {
+      // Create a reference to the specific document
+      const docRef = doc(db, "Orders", id, "Order" + id, itemId);
+
+      // Update the document with the provided data
+      await updateDoc(docRef, updatedData);
+
+      toast.success("Document updated successfully!");
+      window.location.reload();
+    } catch (error) {
+      toast.error("Error updating document");
+      console.error("Error details:", error);
+    }
+  };
 
   return (
     <>
@@ -66,7 +119,7 @@ const OrderDetails = () => {
         </div>
       ) : (
         <div className="flex items-center justify-center w-full mb-[144px] ">
-          <div className="flex flex-col  w-[45%]  m-6 p-8 border-2  rounded-lg">
+          <div className="flex flex-col  w-[50%]  m-6 p-8 border-2  rounded-lg">
             <div className="flex flex-col items-center justify-center rounded-lg border-2 shadow-md py-[16px] border-t-[#bfb63e] ">
               <div className="text-[28px] font-medium  ">
                 {userData.fname} {userData.lname}
@@ -82,16 +135,21 @@ const OrderDetails = () => {
               <div className=" text-[24px] p-4 font-medium my-2 ">
                 Pusrchasing Items
               </div>
-              <div className="flex flex-col  w-[full] gap-[12px] ">
-                <div className="flex items-center justify-between w-full p-4 rounded-lg">
-                  <div className="text-[18px] text-[#626060] font-bold uppercase ">
-                    Hoarding
+              <div className="flex flex-col  gap-[12px] ">
+                <div className="flex items-center px-6  ">
+                  <div className="flex items-center justify-between w-[85%]  py-4 rounded-lg">
+                    <div className="text-[18px] text-[#626060] font-bold uppercase ">
+                      Hoarding
+                    </div>
+                    <div className="text-[16px] text-[#626060] font-bold uppercase">
+                      Location
+                    </div>
+                    <div className="text-[16px] text-[#626060] font-bold uppercase">
+                      Contact
+                    </div>
                   </div>
-                  <div className="text-[16px] text-[#626060] font-bold uppercase">
-                    Location
-                  </div>
-                  <div className="text-[16px] text-[#626060] font-bold uppercase">
-                    Contact No.
+                  <div className="text-[16px] text-[#626060] font-bold uppercase ml-10">
+                    Action
                   </div>
                 </div>
 
@@ -109,11 +167,39 @@ const OrderDetails = () => {
                     <div className="text-[16px] text-[#626060] font-semibold">
                       {item.contactNumber}
                     </div>
+
+                    {item.orderStatus === "Pending" ? (
+                      <div className="flex gap-2">
+                        {/* Accept Button */}
+                        <img
+                          src={acceptIcon}
+                          className="h-[34px] w-[34px] bg-green-600 text-white rounded-md hover:bg-green-700 cursor-pointer"
+                          onClick={() => handleAccept(item.id)}
+                        />
+
+                        {/* Reject Button */}
+                        <img
+                          src={rejectIcon}
+                          className="h-[34px] w-[34px] bg-red-600 text-white rounded-md hover:bg-red-700 cursor-pointer"
+                          onClick={() => handleReject(item.id)}
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className={`${
+                          item.orderStatus === "Accepted"
+                            ? "text-green-600 "
+                            : "text-red-500"
+                        } px-4 `}
+                      >
+                        {item.orderStatus}{" "}
+                      </div>
+                    )}
                   </div>
                 ))}
                 <div className="flex justify-end my-[24px] w-full">
                   <div
-                    className=" text-black p-[5px_20px]  max-w-[100px] border-2 rounded-[2px] hover:bg-[#ebeaea] cursor-pointer"
+                    className=" text-black p-[5px_20px]  max-w-[100px] border-2 rounded-[2px] hover:bg-[#beb4b4] cursor-pointer"
                     onClick={() => navigate("/orders")}
                   >
                     Back

@@ -31,14 +31,14 @@ const Footer = () => {
             fourth="Privacy policy"
             fifth="Refund policy"
           />
-          <FooterItems
+          {/* <FooterItems
             head="Quick Links"
             first="Login"
             second="About Us"
             third="Contact"
             fourth="Privacy policy"
             fifth="Refund policy"
-          />
+          /> */}
 
           <div className="flex flex-col items-start justify-start gap-[40px] h-[366px] min-w-[300px]">
             <div className="text-[24px] text-[#000] font-[700]">Reach Us</div>

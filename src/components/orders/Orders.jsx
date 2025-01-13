@@ -92,20 +92,20 @@ const Orders = () => {
       toast.error("Error fetching orders.");
     }
   };
-  const AcceptOrder = async (id) => {
-    try {
-      // setLoading(true);
-      const orderRef = doc(db, "Orders", id);
-      await updateDoc(orderRef, { orderStatus: "Accepted" });
-      toast.success(" Order Accepted");
-      fetchOrders();
-      // setLoading(false);
-      // Update each order as read
-      // setUnreadCount(1--);y
-    } catch (error) {
-      toast.error("Error in accepting order  ", error);
-    }
-  };
+  // const AcceptOrder = async (id) => {
+  //   try {
+  //     // setLoading(true);
+  //     const orderRef = doc(db, "Orders", id);
+  //     await updateDoc(orderRef, { orderStatus: "Accepted" });
+  //     toast.success(" Order Accepted");
+  //     fetchOrders();
+  //     // setLoading(false);
+  //     // Update each order as read
+  //     // setUnreadCount(1--);y
+  //   } catch (error) {
+  //     toast.error("Error in accepting order  ", error);
+  //   }
+  // };
 
   const MarkRead = async (id) => {
     try {
@@ -175,7 +175,7 @@ const Orders = () => {
                     </div>
                   </div>
                   <div className="flex gap-[12px] items-center">
-                    {item.orderStatus === "Pending" ? (
+                    {/* {item.orderStatus === "Pending" ? (
                       <button
                         className="bg-[#1f9427] text-white p-[5px_20px]  max-w-[100px] rounded-[2px] hover:bg-[#1b7f2a]"
                         onClick={() => {
@@ -187,7 +187,7 @@ const Orders = () => {
                       </button>
                     ) : (
                       <div></div>
-                    )}
+                    )} */}
                     <button
                       className=" text-black p-[5px_20px]  max-w-[100px] border-2 rounded-[2px] hover:bg-[#ebeaea]"
                       onClick={() => {
