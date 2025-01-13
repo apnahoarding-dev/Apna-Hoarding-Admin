@@ -113,8 +113,10 @@ const CreateItem = () => {
         Timestamp: serverTimestamp(),
       });
       toast.success("Advertisement Added successfully");
+      navigate("/allitem");
     } catch (error) {
       console.log(error);
+      toast.error("Error in adding advertisement");
     }
   };
 
@@ -392,7 +394,7 @@ const CreateItem = () => {
               <button
                 onClick={() => {
                   SubmitItem();
-                  navigate("/allitem");
+                  // navigate("/allitem");
                 }}
                 disabled={perc != null && perc < 100}
                 className="  text-[18px] text-[#FFF] bg-[#B88E2F] hover:bg-[#a37c20] w-full font-[600] p-[16px] cursor-pointer disabled:bg-[#dbbb6f]"
