@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/Logo.svg";
+import logo from "../../assets/Logo.png";
 // import { useNavigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 const Header = () => {
@@ -8,13 +8,13 @@ const Header = () => {
     <>
       <div className="flex flex-col w-full ">
         <div className="flex items-center justify-between  h-[100px] px-[34px] w-full  shadow-sm">
-          <img src={logo} alt="logo" />
+          <img className=" w-[320px]" src={logo} alt="logo" />
           <div className="flex gap-[16px] pr-6">
             <div
               className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer hover:text-[#bfb63e]"
               onClick={() => navigate("/allitem")}
             >
-              Hoardings
+              Hoarding
             </div>
             <div
               className="text-[26px] text-[#626060] font-semibold pr-8 cursor-pointer hover:text-[#bfb63e]"
